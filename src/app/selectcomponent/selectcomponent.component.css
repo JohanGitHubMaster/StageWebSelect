@@ -1,0 +1,7 @@
+
+
+.custom-mat-form-field .mat-select-arrow-wrapper {
+  right: 8px; /* Ajustez la valeur en fonction de vos besoins */
+  top: calc(50% - 40px); /* Ajustez la valeur en fonction de vos besoins */
+  height:20px;
+}

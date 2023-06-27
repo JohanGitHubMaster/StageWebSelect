@@ -1,0 +1,108 @@
+.button-icon {
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 40px;
+    height: 40px;
+}
+
+.combo-box {
+    margin-left: 20px;
+}
+
+.mat-form-field-100 {
+    width: 100%;
+}
+
+.mat-form-field-50 {
+    width: 50%;
+}
+
+.button-search {
+    margin-bottom: 20px;
+}
+mat-grid-tile {
+    justify-content: flex-start !important ;
+    align-items: flex-start !important;
+ }
+
+ .flex-start {
+    position: absolute;
+    left: 0px;
+ 
+  }
+  .flex-start-button {
+    position: absolute;
+    left: 0px;
+    top: 5px;
+  }
+
+  .margin-label-right{
+    margin-right: 20px;
+  }
+  .margin-label-left{
+    margin-left: 20px;
+  }
+
+  .flex-end {
+    position: absolute;
+    right: 0px;
+  }
+
+  .mat-divider {
+    border-top-color: black;
+}
+
+.mat-select-panel {
+  background: red;
+  width: 40px;
+}
+  
+.custom-field
+  .mat-mdc-form-field-flex
+  .mdc-notched-outline
+  .mdc-notched-outline__trailing {
+  border-radius: 0 25px 25px 0;
+}
+
+.custom-field
+  .mat-mdc-form-field-flex
+  .mdc-notched-outline
+  .mdc-notched-outline__leading {
+  border-radius: 25px 0 0 25px;
+  width: 25px !important;
+}
+
+.custom-field .mat-mdc-form-field-flex {
+  height: 22px;
+  align-items: center;
+}
+
+.custom-field
+  .mat-mdc-form-field-flex
+  .mdc-notched-outline
+  .mdc-notched-outline__notch
+  label {
+  top: 50%;
+}
+
+.custom-field
+  .mat-mdc-form-field-flex
+  .mdc-notched-outline
+  .mdc-notched-outline__notch
+  label.mdc-floating-label--float-above {
+  top: 28px;
+}
+
+.select-panel {
+  border-radius: 20px !important;
+  border: 1px solid gray !important;
+  position: absolute !important;
+  top: 12px !important;
+  height: 12rem;
+  background-color: gray;
+}
+
+.select-panel mat-option {
+  font-size: 14px !important;
+}
