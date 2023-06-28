@@ -1,0 +1,13 @@
+mat-grid-list {
+    width: 100%;
+  }
+
+  .expansion-overview-example .mat-expansion-panel-body {
+    background-color: red;
+}
+.flex-start {
+    position: absolute;
+    left: 0px;
+    top: 20px;
+    width: 100%;
+  }

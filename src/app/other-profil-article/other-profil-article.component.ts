@@ -1,109 +1,29 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map, startWith } from 'rxjs';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+
 @Component({
-  selector: 'app-articles',
-  templateUrl: './articles.component.html',
-  styleUrls: ['./articles.component.css']
+  selector: 'app-other-profil-article',
+  templateUrl: './other-profil-article.component.html',
+  styleUrls: ['./other-profil-article.component.css']
 })
-export class ArticlesComponent implements AfterViewInit{
-
+export class OtherProfilArticleComponent {
   displayedColumns: string[] = ['priorite', 'commande', 'ID', 'client','hits','traitee','hitsValides','localisation','origine','lecteur'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-
-  states: string[] = [
-    'Alabama',
-    'Alaska',
-    'Arizona',
-    'Arkansas',
-    'California',
-    'Colorado',
-    'Connecticut',
-    'Delaware',
-    'Florida',
-    'Georgia',
-    'Hawaii',
-    'Idaho',
-    'Illinois',
-    'Indiana',
-    'Iowa',
-    'Kansas',
-    'Kentucky',
-    'Louisiana',
-    'Maine',
-    'Maryland',
-    'Massachusetts',
-    'Michigan',
-    'Minnesota',
-    'Mississippi',
-    'Missouri',
-    'Montana',
-    'Nebraska',
-    'Nevada',
-    'New Hampshire',
-    'New Jersey',
-    'New Mexico',
-    'New York',
-    'North Carolina',
-    'North Dakota',
-    'Ohio',
-    'Oklahoma',
-    'Oregon',
-    'Pennsylvania',
-    'Rhode Island',
-    'South Carolina',
-    'South Dakota',
-    'Tennessee',
-    'Texas',
-    'Utah',
-    'Vermont',
-    'Virginia',
-    'Washington',
-    'West Virginia',
-    'Wisconsin',
-    'Wyoming',
-  ];
-
-  myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions!: Observable<string[]>;
   priorityId!:number;
-  
-
-  @ViewChild
-  (MatPaginator)paginator!: MatPaginator;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router) { }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
-  ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
+  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.slice(0,5));
+  dataList = ELEMENT_DATA.slice(0,5);
+  constructor(@Inject(MAT_DIALOG_DATA) public data:string) 
+  {
+    console.log(this.data);
+    
   }
 
   ShowArticles(element:PeriodicElement){
     this.priorityId = element.priorite
-    this.router.navigate(["/articleToValidate"])
     console.log(element)
   }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.states.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
 }
+
 export interface PeriodicElement {
   priorite: number;
   commande: string;

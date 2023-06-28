@@ -24,11 +24,46 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { ArticlesToValidateComponent } from './articles-to-validate/articles-to-validate.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { ProfilDescriptionComponent } from './profil-description/profil-description.component';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { OtherProfilArticleComponent } from './other-profil-article/other-profil-article.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { Routes, RouterModule } from '@angular/router';
+import {MatRadioModule} from '@angular/material/radio';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: ArticlesComponent
+  },
+  {
+    path: 'article',
+    component: ArticlesComponent
+  },
+  {
+    path: 'articleToValidate',
+    component: ArticlesToValidateComponent
+  },
+  {
+    path: 'profil',
+    component: ProfilDescriptionComponent
+  },
+  {
+    path: 'otherprofil',
+    component: OtherProfilArticleComponent
+  },
+]
+
 @NgModule({
   declarations: [
     AppComponent,
     ArticlesComponent,
-    SelectcomponentComponent
+    SelectcomponentComponent,
+    ArticlesToValidateComponent,
+    ProfilDescriptionComponent,
+    OtherProfilArticleComponent
   ],
   imports: [
     BrowserModule,
@@ -47,8 +82,12 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatNativeDateModule,
     ReactiveFormsModule,
     MatToolbarModule, MatSidenavModule,MatButtonToggleModule,
-    MatAutocompleteModule
-
+    MatAutocompleteModule,
+    MatExpansionModule,
+    MatDialogModule,
+    MatTabsModule,
+    RouterModule.forRoot(routes),
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]

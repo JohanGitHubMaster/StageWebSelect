@@ -18,7 +18,7 @@
       </h4>    
 
       <mat-divider></mat-divider>
-      <button mat-button class="menu-button">
+      <button mat-button class="menu-button" routerLink="/article">
           <mat-icon>home</mat-icon>
           <span>Client</span>
       </button>
@@ -32,7 +32,9 @@
   <mat-sidenav-content>
       <div class="content">
           <!-- Indique que le composant affiché sera celui correspondant à l'URL courant -->
-          <app-articles></app-articles>
+          <!-- <app-articles></app-articles> -->
+          <router-outlet></router-outlet>
+          <!-- <app-articles-to-validate></app-articles-to-validate> -->
       </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
