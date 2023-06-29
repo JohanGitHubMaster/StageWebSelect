@@ -18,7 +18,5 @@ export class AppComponent {
     //     this.currentRoute = event.url;
     //   }
     // });
-
-
   }
 }
