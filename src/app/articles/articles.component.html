@@ -38,11 +38,11 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <mat-form-field class="combo-box mat-form-field-100">
-            <mat-label>Commande</mat-label>
-            <input type="text" placeholder="Commande" aria-label="Commande" matInput [formControl]="myControl"
-                [matAutocomplete]="auto">
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            <mat-label>Commandes</mat-label>
+            <input type="text" placeholder="Commande" aria-label="Commande" matInput [formControl]="OrderControl"
+                [matAutocomplete]="autoorder">
+            <mat-autocomplete autoActiveFirstOption #autoorder="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOrderOptions | async" [value]="option">
                     {{option}}
                 </mat-option>
             </mat-autocomplete>

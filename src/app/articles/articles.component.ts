@@ -4,6 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
+import { VWebOrders } from 'src/models/VWebOrders.model';
+import { VWebOrdersService } from 'src/shared/VWebOrders/VWebOrders.service';
 @Component({
   selector: 'app-articles',
   templateUrl: './articles.component.html',
@@ -13,7 +15,7 @@ export class ArticlesComponent implements AfterViewInit {
 
   displayedColumns: string[] = ['priorite', 'commande', 'ID', 'client', 'hits', 'traitee', 'hitsValides', 'localisation', 'origine', 'lecteur'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-
+  vWebOrders!:VWebOrders[];
   states: string[] = [
     'Alabama',
     'Alaska',
@@ -68,9 +70,12 @@ export class ArticlesComponent implements AfterViewInit {
   ];
 
   myControl = new FormControl('');
+  OrderControl = new FormControl('');
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions!: Observable<string[]>;
+  filteredOrderOptions!: Observable<string[]>;
   priorityId!: number;
+  
 
 
   @ViewChild
@@ -78,17 +83,28 @@ export class ArticlesComponent implements AfterViewInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private vWebOrdersService:VWebOrdersService) { }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
+    this.vWebOrdersService.getVWebOrders(1,1000).subscribe(result=>{
+      this.vWebOrders = result.docs;
+      console.log(this.vWebOrders);
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+      );
+
+      this.filteredOrderOptions = this.OrderControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterOrder(value || '')),
+      );
+    })
+    
   }
 
   ShowArticles(element: PeriodicElement) {
@@ -99,8 +115,24 @@ export class ArticlesComponent implements AfterViewInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
+    // const customer = this.vWebOrders.map(function(customer){
+    //   return customer.Customer
+    // })
+    const unique = [...new Set(this.vWebOrders?.map(item => item.Customer))];
+    // var s = this.vWebOrders?.map(function (value) {
+    //   return value.Customer
+    // });
+    //console.log(unique)
+   
 
-    return this.states.filter(option => option.toLowerCase().includes(filterValue));
+    return unique?.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private _filterOrder(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    const unique = [...new Set(this.vWebOrders?.map(item => item.OrderName.toString()))];
+    console.log(unique)
+    return unique?.filter(option => option.toLowerCase().includes(filterValue));
   }
 
 }
