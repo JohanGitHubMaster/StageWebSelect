@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, map, of, startWith } from 'rxjs';
 import { VWebOrders } from 'src/models/VWebOrders.model';
 import { VWebOrdersService } from 'src/shared/VWebOrders/VWebOrders.service';
 @Component({
@@ -71,9 +71,13 @@ export class ArticlesComponent implements AfterViewInit {
 
   myControl = new FormControl('');
   OrderControl = new FormControl('');
+  CustomerIDControl = new FormControl('');
+  OrderIdOptionsControl = new FormControl('');
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions!: Observable<string[]>;
+  filteredCustomerIdOptions!: Observable<string[]>;
   filteredOrderOptions!: Observable<string[]>;
+  filteredOrderIdOptions!: Observable<string[]>;
   priorityId!: number;
   
 
@@ -93,19 +97,34 @@ export class ArticlesComponent implements AfterViewInit {
   ngOnInit() {
     this.vWebOrdersService.getVWebOrders(1,1000).subscribe(result=>{
       this.vWebOrders = result.docs;
-      console.log(this.vWebOrders);
+      //console.log(this.vWebOrders);
       this.filteredOptions = this.myControl.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value || '')),
       );
-
+      //filtre des commandes
       this.filteredOrderOptions = this.OrderControl.valueChanges.pipe(
         startWith(''),
         map(value => this._filterOrder(value || '')),
       );
+
+      //filtre par Id du client 
+      this.filteredCustomerIdOptions = this.CustomerIDControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterCustomerID(value || '')),
+      );
+
+      //filtre par id de la Commande
+      this.filteredOrderIdOptions = this.OrderIdOptionsControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterOrderID(value || '')),
+      );
+
     })
     
   }
+
+
 
   ShowArticles(element: PeriodicElement) {
     this.priorityId = element.priorite
@@ -131,8 +150,153 @@ export class ArticlesComponent implements AfterViewInit {
   private _filterOrder(value: string): string[] {
     const filterValue = value.toLowerCase();
     const unique = [...new Set(this.vWebOrders?.map(item => item.OrderName.toString()))];
-    console.log(unique)
+    //console.log(unique)
     return unique?.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private _filterCustomerID(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    const unique = [...new Set(this.vWebOrders?.map(item => item.CustomerId.toString()))];
+    //console.log(unique)
+    return unique?.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private _filterOrderID(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    const unique = [...new Set(this.vWebOrders?.map(item => item.OrderId.toString()))];
+    console.log(value)
+    return unique?.filter(option => option.toLowerCase().includes(filterValue));
+  }
+  private _filterOrderByCustomer(value: string,vWebOrders:VWebOrders): string[] {
+    const filterValue = value.toLowerCase();
+    const unique = [...new Set(this.vWebOrders?.filter(item=>item.CustomerId==vWebOrders.CustomerId).map(item => item.OrderName.toString()))];
+    console.log(value)
+    return unique?.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private _filterOrderIDByCustomer(value: string,vWebOrders:VWebOrders): string[] {
+    const filterValue = value.toLowerCase();
+    const unique = [...new Set(this.vWebOrders?.filter(item=>item.CustomerId==vWebOrders.CustomerId).map(item => item.OrderId.toString()))];
+    console.log(value)
+    return unique?.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  setValueCustomer(event:any){
+    // console.log(event);
+    // console.log(this.vWebOrders?.filter(x=>x.CustomerId == event)[0])
+    var result = this.vWebOrders?.filter(x=>x.CustomerId == event)[0];
+    this.myControl.setValue(result.Customer)
+    this.OrderControl.setValue('')
+    this.OrderIdOptionsControl.setValue('')
+    // const uniqueOrderId = [...new Set(this.vWebOrders?.filter(x=>x.CustomerId==result.CustomerId).map(item => item.OrderId.toString()))];
+    // const uniqueOrderName = [...new Set(this.vWebOrders?.filter(x=>x.CustomerId==result.CustomerId).map(item => item.OrderName.toString()))];
+    // this.filteredOrderIdOptions = of(uniqueOrderId)
+    // this.filteredOrderOptions = of(uniqueOrderName)
+
+     //filtre des commandes
+     this.filteredOrderOptions = this.OrderControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterOrderByCustomer(value || '',result)),
+    );
+
+    this.filteredOrderIdOptions = this.OrderIdOptionsControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterOrderIDByCustomer(value || '',result)),
+    );
+
+ 
+    
+    console.log(of([...new Set(this.vWebOrders?.filter(x=>x.CustomerId==result.CustomerId).map(item => item.OrderId.toString()))]))
+    //this.myControl = new FormControl(this.vWebOrders?.filter(x=>x.CustomerId == event)[0].Customer)
+  }
+
+  setValueCustomerID(event:any){
+    // console.log(event);
+    // console.log(this.vWebOrders?.filter(x=>x.Customer == event)[0])
+    var result = this.vWebOrders?.filter(x=>x.Customer == event)[0];
+    this.CustomerIDControl.setValue(result.CustomerId.toString())
+    this.OrderControl.setValue('')
+    this.OrderIdOptionsControl.setValue('')
+    // const uniqueOrderId = [...new Set(this.vWebOrders?.filter(x=>x.CustomerId==result.CustomerId).map(item => item.OrderId.toString()))];
+    // const uniqueOrderName = [...new Set(this.vWebOrders?.filter(x=>x.CustomerId==result.CustomerId).map(item => item.OrderName.toString()))];
+    // this.filteredOrderIdOptions = of(uniqueOrderId)
+    // this.filteredOrderOptions = of(uniqueOrderName)
+
+    //filtre des commandes
+    this.filteredOrderOptions = this.OrderControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterOrderByCustomer(value || '',result)),
+    );
+
+    this.filteredOrderIdOptions = this.OrderIdOptionsControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterOrderIDByCustomer(value || '',result)),
+    );
+    
+
+    //this.myControl = new FormControl(this.vWebOrders?.filter(x=>x.CustomerId == event)[0].Customer)
+  }
+
+  setValueOrder(event:any){
+    // console.log(event);
+    // console.log(this.vWebOrders?.filter(x=>x.OrderId == event)[0])
+    console.log(event)
+    var result = this.vWebOrders?.filter(x=>x.OrderId == event)[0]
+    this.OrderControl.setValue(result?.OrderName.toString())
+    this.CustomerIDControl.setValue(result?.CustomerId.toString())
+    this.myControl.setValue(result?.Customer)
+    //this.myControl = new FormControl(this.vWebOrders?.filter(x=>x.CustomerId == event)[0].Customer)
+  }
+
+  setValueOrderID(event:any){
+    // console.log(event);
+    // console.log(this.vWebOrders?.filter(x=>x.OrderName == event)[0])
+    var result = this.vWebOrders?.filter(x=>x.OrderName == event)[0]
+    this.OrderIdOptionsControl.setValue(result?.OrderId.toString())
+    this.CustomerIDControl.setValue(result?.CustomerId.toString())
+    this.myControl.setValue(result?.Customer)
+    //this.myControl = new FormControl(this.vWebOrders?.filter(x=>x.CustomerId == event)[0].Customer)
+  }
+
+  initializeCustomer(){
+    console.log("miditra")
+          this.myControl.setValue('')
+          this.CustomerIDControl.setValue('')
+
+        //console.log(this.vWebOrders);
+        this.filteredOptions = this.myControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value || '')),
+        );
+        //filtre des commandes
+        this.filteredOrderOptions = this.OrderControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filterOrder(value || '')),
+        );
+
+        //filtre par Id du client 
+        this.filteredCustomerIdOptions = this.CustomerIDControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filterCustomerID(value || '')),
+        );
+
+        //filtre par id de la Commande
+        this.filteredOrderIdOptions = this.OrderIdOptionsControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filterOrderID(value || '')),
+        ); 
+  }
+
+  initializeOrder(){
+    console.log("miditra")
+          this.OrderControl.setValue('')
+          this.OrderIdOptionsControl.setValue('')
+
+       
+
+
+
+    
   }
 
 }

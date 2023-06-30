@@ -14,7 +14,7 @@
             <mat-label>Client</mat-label>
             <input type="text" placeholder="Client" aria-label="Client" matInput [formControl]="myControl"
                 [matAutocomplete]="auto">
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)='setValueCustomerID($event.option.value)'>
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                     {{option}}
                 </mat-option>
@@ -23,15 +23,15 @@
 
         <mat-form-field class="combo-box mat-form-field-50">
             <mat-label>ID Client</mat-label>
-            <input type="text" placeholder="ID" aria-label="ID Client" matInput [formControl]="myControl"
-                [matAutocomplete]="auto">
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            <input type="text" placeholder="ID" aria-label="ID Client" matInput [formControl]="CustomerIDControl"
+                [matAutocomplete]="autocustomer">
+            <mat-autocomplete autoActiveFirstOption #autocustomer="matAutocomplete"  (optionSelected)='setValueCustomer($event.option.value)'>
+                <mat-option *ngFor="let option of filteredCustomerIdOptions | async" [value]="option">
                     {{option}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
-        <button mat-icon-button matTooltip="Basic" style="margin-bottom: 20px; color: #00c8f8;"
+        <button mat-icon-button (click)="initializeCustomer()" matTooltip="Basic" style="margin-bottom: 20px; color: #00c8f8;" 
             aria-label="Example icon-button with a heart icon">
             <mat-icon>close</mat-icon>
         </button>
@@ -39,9 +39,9 @@
     <mat-grid-tile>
         <mat-form-field class="combo-box mat-form-field-100">
             <mat-label>Commandes</mat-label>
-            <input type="text" placeholder="Commande" aria-label="Commande" matInput [formControl]="OrderControl"
+            <input type="text" placeholder="Commande" aria-label="Commande" matInput [formControl]="OrderControl" 
                 [matAutocomplete]="autoorder">
-            <mat-autocomplete autoActiveFirstOption #autoorder="matAutocomplete">
+            <mat-autocomplete autoActiveFirstOption #autoorder="matAutocomplete" (optionSelected)='setValueOrderID($event.option.value)'>
                 <mat-option *ngFor="let option of filteredOrderOptions | async" [value]="option">
                     {{option}}
                 </mat-option>
@@ -50,16 +50,16 @@
 
         <mat-form-field class="combo-box mat-form-field-50">
             <mat-label>ID Commande</mat-label>
-            <input type="text" placeholder="ID" aria-label="ID Commande" matInput [formControl]="myControl"
-                [matAutocomplete]="auto">
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            <input type="text" placeholder="ID" aria-label="ID Commande" matInput [formControl]="OrderIdOptionsControl" 
+                [matAutocomplete]="autoOrderID">
+            <mat-autocomplete autoActiveFirstOption #autoOrderID="matAutocomplete" (optionSelected)='setValueOrder($event.option.value)'>
+                <mat-option *ngFor="let option of filteredOrderIdOptions | async" [value]="option">
                     {{option}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
 
-        <button mat-icon-button matTooltip="Basic" style="margin-bottom: 20px; color: #00c8f8;"
+        <button mat-icon-button matTooltip="Basic" style="margin-bottom: 20px; color: #00c8f8;" (click)="initializeOrder()"
             aria-label="Example icon-button with a heart icon">
             <mat-icon>close</mat-icon>
         </button>
