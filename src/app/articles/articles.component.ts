@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map, of, startWith } from 'rxjs';
+import { VOrderToTreat } from 'src/models/VOrderToTreat.model';
 import { VWebOrders } from 'src/models/VWebOrders.model';
+import { VOrderToTreatService } from 'src/shared/VarticleOrderToTreat/VarticleOrderToTreat.service';
 import { VWebOrdersService } from 'src/shared/VWebOrders/VWebOrders.service';
 @Component({
   selector: 'app-articles',
@@ -14,7 +16,7 @@ import { VWebOrdersService } from 'src/shared/VWebOrders/VWebOrders.service';
 export class ArticlesComponent implements AfterViewInit {
 
   displayedColumns: string[] = ['priorite', 'commande', 'ID', 'client', 'hits', 'traitee', 'hitsValides', 'localisation', 'origine', 'lecteur'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  
   vWebOrders!:VWebOrders[];
   states: string[] = [
     'Alabama',
@@ -79,8 +81,18 @@ export class ArticlesComponent implements AfterViewInit {
   filteredOrderOptions!: Observable<string[]>;
   filteredOrderIdOptions!: Observable<string[]>;
   priorityId!: number;
+  vorderToTreats!:VOrderToTreat[];
+  //pagination
+  length = 500;
+  pageSize = 10;
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25];
+  hidePageSize = false;
+  showPageSizeOptions = true;
+  showFirstLastButtons = true;
+  disabled = false;
   
-
+  dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
 
   @ViewChild
     (MatPaginator) paginator!: MatPaginator;
@@ -88,15 +100,32 @@ export class ArticlesComponent implements AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private vWebOrdersService:VWebOrdersService) { }
+    private vWebOrdersService:VWebOrdersService,
+    private vOrderToTreatService:VOrderToTreatService) { }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator = this.paginator;
+   
   }
 
   ngOnInit() {
+    this.vOrderToTreatService.getVOrderToTreat(0,10).subscribe(result=>{
+     
+      // this.vorderToTreats = result.docs;
+      this.vorderToTreats = result;
+
+      console.log(this.vorderToTreats)
+      this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
+
+   
+      
+    })
+      
+    
     this.vWebOrdersService.getVWebOrders(1,1000).subscribe(result=>{
       this.vWebOrders = result.docs;
+   
+
       //console.log(this.vWebOrders);
       this.filteredOptions = this.myControl.valueChanges.pipe(
         startWith(''),
@@ -290,13 +319,36 @@ export class ArticlesComponent implements AfterViewInit {
   initializeOrder(){
     console.log("miditra")
           this.OrderControl.setValue('')
-          this.OrderIdOptionsControl.setValue('')
+          this.OrderIdOptionsControl.setValue('') 
+  }
 
-       
+  //pagination
+  pageEvent!: PageEvent;
 
-
-
+  handlePageEvent(e: PageEvent) {
+    var current = (e.pageIndex) * e.pageSize;
+    //this.vorderToTreats = ELEMENT_DATA.slice(current, e.pageSize + current)
+    this.pageEvent = e;
+    this.length = 3339;
+    this.pageSize = e.pageSize;
+    this.pageIndex = e.pageIndex;
     
+    this.vOrderToTreatService.getVOrderToTreat(current, this.pageSize).subscribe(result=>{
+     console.log("le plus "+e.pageSize)
+     console.log(current)
+      // this.vorderToTreats = result.docs;
+      this.vorderToTreats = result;
+
+      console.log(this.vorderToTreats)
+      this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
+      
+    })
+  }
+
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    if (setPageSizeOptionsInput) {
+      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
+    }
   }
 
 }

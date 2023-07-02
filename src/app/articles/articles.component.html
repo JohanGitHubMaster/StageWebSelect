@@ -119,7 +119,7 @@
         <!-- Position Column -->
         <ng-container matColumnDef="priorite">
             <th mat-header-cell *matHeaderCellDef> priorite </th>
-            <td mat-cell *matCellDef="let element"> {{element.priorite}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.WebPriority}} </td>
         </ng-container>
 
 
@@ -127,19 +127,19 @@
         <!-- Name Column -->
         <ng-container matColumnDef="commande">
             <th mat-header-cell *matHeaderCellDef> commande </th>
-            <td mat-cell *matCellDef="let element"> {{element.commande}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.VW.OrderName}} </td>
         </ng-container>
 
         <!-- Weight Column -->
         <ng-container matColumnDef="ID">
             <th mat-header-cell *matHeaderCellDef> ID </th>
-            <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.ASd.OrderId}} </td>
         </ng-container>
 
         <!-- Weight Column -->
         <ng-container matColumnDef="client">
             <th mat-header-cell *matHeaderCellDef> client </th>
-            <td mat-cell *matCellDef="let element"> {{element.client}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.VW.Customer}} </td>
         </ng-container>
 
         <!-- Symbol Column -->
@@ -163,13 +163,13 @@
         <!-- Symbol Column -->
         <ng-container matColumnDef="localisation">
             <th mat-header-cell *matHeaderCellDef> localisation </th>
-            <td mat-cell *matCellDef="let element"> {{element.localisation}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.Location}} </td>
         </ng-container>
 
         <!-- Symbol Column -->
         <ng-container matColumnDef="origine">
             <th mat-header-cell *matHeaderCellDef> origine </th>
-            <td mat-cell *matCellDef="let element"> {{element.origine}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.Origine}} </td>
         </ng-container>
 
         <!-- Symbol Column -->
@@ -183,7 +183,17 @@
             [ngClass]="{'new-row': row.priorite == priorityId }"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements"
-        style="background-color: whitesmoke;">
-    </mat-paginator>
+    <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" aria-label="Select pag of periodic elements"
+        style="background-color: whitesmoke;"
+        [length]="length"
+        [pageSize]="pageSize" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"
+  [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize" [pageIndex]="pageIndex"
+  >
+    </mat-paginator> -->
+    <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" style="background-color: whitesmoke;"
+  [length]="length"
+  [pageSize]="pageSize" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"
+  [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize" [pageIndex]="pageIndex"
+  aria-label="Select page">
+</mat-paginator>
 </div>
