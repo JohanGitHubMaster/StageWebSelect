@@ -329,13 +329,28 @@ export class ArticlesComponent implements AfterViewInit {
     var current = (e.pageIndex) * e.pageSize;
     //this.vorderToTreats = ELEMENT_DATA.slice(current, e.pageSize + current)
     this.pageEvent = e;
-    this.length = 3339;
+    this.length = 259;
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
     
-    this.vOrderToTreatService.getVOrderToTreat(current, this.pageSize).subscribe(result=>{
+    this.vOrderToTreatService.getVOrderToTreat(current, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!).subscribe(result=>{
      console.log("le plus "+e.pageSize)
      console.log(current)
+      // this.vorderToTreats = result.docs;
+      this.vorderToTreats = result;
+
+      console.log(this.vorderToTreats)
+      this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
+      
+    })
+  }
+
+  getfilterOrderToTreat(){
+
+    console.log(this.OrderIdOptionsControl.value!)
+    console.log(this.CustomerIDControl.value!)
+    this.vOrderToTreatService.getVOrderToTreat(0, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!).subscribe(result=>{
+     
       // this.vorderToTreats = result.docs;
       this.vorderToTreats = result;
 
