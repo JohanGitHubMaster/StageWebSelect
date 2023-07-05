@@ -4,8 +4,12 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map, of, startWith } from 'rxjs';
+import { MapFlow } from 'src/models/MapFlow.model';
+import { MapLocation } from 'src/models/MapLocation.model';
 import { VOrderToTreat } from 'src/models/VOrderToTreat.model';
 import { VWebOrders } from 'src/models/VWebOrders.model';
+import { MapFlowService } from 'src/shared/MapFlow/MapFlow.service';
+import { MapLocationService } from 'src/shared/MapLocation/MapLocations.service';
 import { VOrderToTreatService } from 'src/shared/VarticleOrderToTreat/VarticleOrderToTreat.service';
 import { VWebOrdersService } from 'src/shared/VWebOrders/VWebOrders.service';
 @Component({
@@ -16,77 +20,31 @@ import { VWebOrdersService } from 'src/shared/VWebOrders/VWebOrders.service';
 export class ArticlesComponent implements AfterViewInit {
 
   displayedColumns: string[] = ['priorite', 'commande', 'ID', 'client', 'hits', 'traitee', 'hitsValides', 'localisation', 'origine', 'lecteur'];
-  
   vWebOrders!:VWebOrders[];
-  states: string[] = [
-    'Alabama',
-    'Alaska',
-    'Arizona',
-    'Arkansas',
-    'California',
-    'Colorado',
-    'Connecticut',
-    'Delaware',
-    'Florida',
-    'Georgia',
-    'Hawaii',
-    'Idaho',
-    'Illinois',
-    'Indiana',
-    'Iowa',
-    'Kansas',
-    'Kentucky',
-    'Louisiana',
-    'Maine',
-    'Maryland',
-    'Massachusetts',
-    'Michigan',
-    'Minnesota',
-    'Mississippi',
-    'Missouri',
-    'Montana',
-    'Nebraska',
-    'Nevada',
-    'New Hampshire',
-    'New Jersey',
-    'New Mexico',
-    'New York',
-    'North Carolina',
-    'North Dakota',
-    'Ohio',
-    'Oklahoma',
-    'Oregon',
-    'Pennsylvania',
-    'Rhode Island',
-    'South Carolina',
-    'South Dakota',
-    'Tennessee',
-    'Texas',
-    'Utah',
-    'Vermont',
-    'Virginia',
-    'Washington',
-    'West Virginia',
-    'Wisconsin',
-    'Wyoming',
-  ];
-
   myControl = new FormControl('');
   OrderControl = new FormControl('');
   CustomerIDControl = new FormControl('');
   OrderIdOptionsControl = new FormControl('');
+  LocationControl = new FormControl('');
+  origineControl= new FormControl('');
+  priorityControl= new FormControl('');
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions!: Observable<string[]>;
   filteredCustomerIdOptions!: Observable<string[]>;
   filteredOrderOptions!: Observable<string[]>;
   filteredOrderIdOptions!: Observable<string[]>;
+  filteredMapLocationOptions!: Observable<string[]>;
+  filteredOrigine!: Observable<string[]>;
+  filteredPriority!: Observable<string[]>;
   priorityId!: number;
   vorderToTreats!:VOrderToTreat[];
+  maplocation!:MapLocation[];
+  mapflow!:MapFlow[];
   //pagination
   length = 500;
   pageSize = 10;
   pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
+  pageSizeOptions = [5, 10, 20];
   hidePageSize = false;
   showPageSizeOptions = true;
   showFirstLastButtons = true;
@@ -101,7 +59,9 @@ export class ArticlesComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private vWebOrdersService:VWebOrdersService,
-    private vOrderToTreatService:VOrderToTreatService) { }
+    private vOrderToTreatService:VOrderToTreatService,
+    private mapLocationService:MapLocationService,
+    private mapFlowService:MapFlowService ) { }
 
   ngAfterViewInit() {
     // this.dataSource.paginator = this.paginator;
@@ -109,16 +69,20 @@ export class ArticlesComponent implements AfterViewInit {
   }
 
   ngOnInit() {
-    this.vOrderToTreatService.getVOrderToTreat(0,10).subscribe(result=>{
+    this.mapFlowService.getMapFlow().subscribe(result=>{
+      this.mapflow = result;
+    })
+
+    this.mapLocationService.getMapLocation().subscribe(result=>{
+      this.maplocation = result;
+    })
+    this.vOrderToTreatService.getVOrderToTreat(0,10,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
      
       // this.vorderToTreats = result.docs;
-      this.vorderToTreats = result;
-
-      console.log(this.vorderToTreats)
-      this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
-
-   
-      
+      this.length = result.Length;
+      this.vorderToTreats = result.result;   
+      // console.log(this.vorderToTreats)
+      this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);     
     })
       
     
@@ -149,16 +113,26 @@ export class ArticlesComponent implements AfterViewInit {
         map(value => this._filterOrderID(value || '')),
       );
 
+      this.filteredMapLocationOptions = this.LocationControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterMapLocation(value || '')),
+      );
+
+      this.filteredOrigine = this.origineControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterMapFlow(value || '')),
+      );
+
     })
     
   }
 
-
+  
 
   ShowArticles(element: PeriodicElement) {
     this.priorityId = element.priorite
     this.router.navigate(["/articleToValidate"])
-    console.log(element)
+    // console.log(element)
   }
 
   private _filter(value: string): string[] {
@@ -193,20 +167,34 @@ export class ArticlesComponent implements AfterViewInit {
   private _filterOrderID(value: string): string[] {
     const filterValue = value.toLowerCase();
     const unique = [...new Set(this.vWebOrders?.map(item => item.OrderId.toString()))];
-    console.log(value)
+    // console.log(value)
     return unique?.filter(option => option.toLowerCase().includes(filterValue));
   }
   private _filterOrderByCustomer(value: string,vWebOrders:VWebOrders): string[] {
     const filterValue = value.toLowerCase();
     const unique = [...new Set(this.vWebOrders?.filter(item=>item.CustomerId==vWebOrders.CustomerId).map(item => item.OrderName.toString()))];
-    console.log(value)
+    // console.log(value)
     return unique?.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   private _filterOrderIDByCustomer(value: string,vWebOrders:VWebOrders): string[] {
     const filterValue = value.toLowerCase();
     const unique = [...new Set(this.vWebOrders?.filter(item=>item.CustomerId==vWebOrders.CustomerId).map(item => item.OrderId.toString()))];
-    console.log(value)
+    // console.log(value)
+    return unique?.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private _filterMapLocation(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    const unique = [...new Set(this.maplocation?.map(item => item.DescFrench.toString()))];
+    // console.log(value)
+    return unique?.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private _filterMapFlow(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    const unique = [...new Set(this.mapflow?.map(item => item.DescFrench.toString()))];
+    // console.log(value)
     return unique?.filter(option => option.toLowerCase().includes(filterValue));
   }
 
@@ -235,7 +223,7 @@ export class ArticlesComponent implements AfterViewInit {
 
  
     
-    console.log(of([...new Set(this.vWebOrders?.filter(x=>x.CustomerId==result.CustomerId).map(item => item.OrderId.toString()))]))
+    // console.log(of([...new Set(this.vWebOrders?.filter(x=>x.CustomerId==result.CustomerId).map(item => item.OrderId.toString()))]))
     //this.myControl = new FormControl(this.vWebOrders?.filter(x=>x.CustomerId == event)[0].Customer)
   }
 
@@ -287,8 +275,15 @@ export class ArticlesComponent implements AfterViewInit {
     //this.myControl = new FormControl(this.vWebOrders?.filter(x=>x.CustomerId == event)[0].Customer)
   }
 
+  initializePriority(){
+    this.priorityControl.setValue('');
+  }
+
+  initializeOrigin(){
+    this.origineControl.setValue('');
+  }
+
   initializeCustomer(){
-    console.log("miditra")
           this.myControl.setValue('')
           this.CustomerIDControl.setValue('')
 
@@ -317,7 +312,6 @@ export class ArticlesComponent implements AfterViewInit {
   }
 
   initializeOrder(){
-    console.log("miditra")
           this.OrderControl.setValue('')
           this.OrderIdOptionsControl.setValue('') 
   }
@@ -329,17 +323,17 @@ export class ArticlesComponent implements AfterViewInit {
     var current = (e.pageIndex) * e.pageSize;
     //this.vorderToTreats = ELEMENT_DATA.slice(current, e.pageSize + current)
     this.pageEvent = e;
-    this.length = 259;
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
-    
-    this.vOrderToTreatService.getVOrderToTreat(current, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!).subscribe(result=>{
-     console.log("le plus "+e.pageSize)
-     console.log(current)
+    console.log(this.LocationControl.value!)
+    this.vOrderToTreatService.getVOrderToTreat(current, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
+    //  console.log("le plus "+e.pageSize)
+    //  console.log(current)
       // this.vorderToTreats = result.docs;
-      this.vorderToTreats = result;
+      this.length = result.Length;
+      this.vorderToTreats = result.result;
 
-      console.log(this.vorderToTreats)
+      // console.log(this.vorderToTreats)
       this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
       
     })
@@ -347,14 +341,16 @@ export class ArticlesComponent implements AfterViewInit {
 
   getfilterOrderToTreat(){
 
-    console.log(this.OrderIdOptionsControl.value!)
-    console.log(this.CustomerIDControl.value!)
-    this.vOrderToTreatService.getVOrderToTreat(0, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!).subscribe(result=>{
+    // console.log(this.OrderIdOptionsControl.value!)
+    // console.log(this.CustomerIDControl.value!)
+    
+    this.vOrderToTreatService.getVOrderToTreat(0, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
      
       // this.vorderToTreats = result.docs;
-      this.vorderToTreats = result;
+      this.length = result.Length;
+      this.vorderToTreats = result.result;
 
-      console.log(this.vorderToTreats)
+      // console.log(this.vorderToTreats)
       this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
       
     })

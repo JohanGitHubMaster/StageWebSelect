@@ -25,11 +25,15 @@
 <mat-divider class="mat-divider"></mat-divider>
 <mat-expansion-panel style="margin-top: 20px;">
   <mat-expansion-panel-header>
-    <mat-grid-list cols="5">
-      <mat-grid-tile colspan="1">position</mat-grid-tile>
-      <mat-grid-tile colspan="1">name</mat-grid-tile>
-      <mat-grid-tile colspan="1">weight</mat-grid-tile>
-      <mat-grid-tile colspan="1">symbol</mat-grid-tile>
+    <mat-grid-list cols="12">
+      <mat-grid-tile colspan="2">Source</mat-grid-tile>
+      <mat-grid-tile colspan="1">Date</mat-grid-tile>
+      <mat-grid-tile colspan="3">Titre</mat-grid-tile>
+      <mat-grid-tile colspan="1">Mots</mat-grid-tile>
+      <mat-grid-tile colspan="1">Langue</mat-grid-tile>
+      <mat-grid-tile colspan="1">Pays</mat-grid-tile>
+      <mat-grid-tile colspan="1">Auteur</mat-grid-tile>
+      <mat-grid-tile colspan="1">Selectionné le</mat-grid-tile>
     </mat-grid-list>
   </mat-expansion-panel-header>
 </mat-expansion-panel>
@@ -38,11 +42,15 @@
     class="example-accordion-item" role="button" tabindex="0" [attr.id]="'accordion-header-' + index"
     [attr.aria-expanded]="accordionItem.expanded" [attr.aria-controls]="'accordion-body-' + index">
     <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-      <mat-grid-list cols="5" rowHeight="30">
-        <mat-grid-tile colspan="1">{{item.position}}</mat-grid-tile>
-        <mat-grid-tile colspan="1">{{item.name}}</mat-grid-tile>
-        <mat-grid-tile colspan="1">{{item.weight}}</mat-grid-tile>
-        <mat-grid-tile colspan="1">{{item.symbol}}</mat-grid-tile>
+      <mat-grid-list cols="12" rowHeight="30">
+        <mat-grid-tile colspan="2">{{item.Source}}</mat-grid-tile>
+        <mat-grid-tile colspan="1">{{item.Date | date:'short'}}</mat-grid-tile>
+        <mat-grid-tile colspan="3">{{item.Titre}}</mat-grid-tile>
+        <mat-grid-tile colspan="1">{{item.Mots}}</mat-grid-tile>
+        <mat-grid-tile colspan="1">{{item.Langue}}</mat-grid-tile>
+        <mat-grid-tile colspan="1">{{item.Pays}}</mat-grid-tile>
+        <mat-grid-tile colspan="1">{{item.Auteur}}</mat-grid-tile>
+        <mat-grid-tile colspan="1">{{item.Selectionne| date:'short'}}</mat-grid-tile>
         <mat-grid-tile colspan="1">
           <button (click)="SelectedRows()" mat-icon-button matTooltip="Basic"
             style="color: #00c8f8; width: 80px; height: 60px;" aria-label="Example icon-button with a heart icon">
@@ -60,9 +68,8 @@
       [attr.aria-labelledby]="'accordion-header-' + index">
       <div>
         <p>mots cles</p>
-        <p>La première ligne indique la priorité (P : 1), le nom de la commande et le numéro de commande, le nom du
-          client, le nombre de fois que le profil </p>
-        <p><a href="#">http:\\sdsddldldsdsdldsddd.html</a></p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend tempor lorem, eu imperdiet risus rhoncus sed. Suspendisse aliquam lacus in lacinia convallis. Praesent consectetur mattis mi, vel venenatis est fringilla eu. Vestibulum id tellus ligula. Nunc at nunc tristique, auctor mi quis, pharetra lorem. Nulla ac turpis sollicitudin, imperdiet mi at, sagittis lacus. Phasellus quis nisl non felis ornare elementum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam non consectetur nulla, ut tincidunt mauris. Ut tristique pulvinar orci, non interdum orci tempus ac. Curabitur rhoncus, mauris sed fermentum porttitor, turpis ex aliquam ipsum, vitae imperdiet massa erat ut metus.</p>
+        <p><a href="#">http:\\articlelink.html</a></p>
         <p>
           <mat-grid-list cols="3" rowHeight="80">
             <mat-grid-tile colspan="1">

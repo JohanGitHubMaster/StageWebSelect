@@ -66,43 +66,44 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <mat-form-field class="combo-box mat-form-field-100">
-            <mat-label>ID Commande</mat-label>
-            <input type="text" placeholder="ID" aria-label="ID Commande" matInput [formControl]="myControl"
-                [matAutocomplete]="auto">
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            <mat-label>Localisation</mat-label>
+            <input type="text" placeholder="ID" aria-label="localisation" matInput [formControl]="LocationControl"
+                [matAutocomplete]="autoLocation">
+            <mat-autocomplete autoActiveFirstOption #autoLocation="matAutocomplete">
+                <mat-option *ngFor="let option of filteredMapLocationOptions | async" [value]="option">
                     {{option}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
 
         <mat-form-field class="combo-box mat-form-field-100">
-            <mat-label>ID Commande</mat-label>
-            <input type="text" placeholder="ID" aria-label="ID Commande" matInput [formControl]="myControl"
-                [matAutocomplete]="auto">
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-label>Priorité</mat-label>
+            <input type="number" placeholder="ID" aria-label="Priorité" matInput [formControl]="priorityControl"
+                >
+            <!-- <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                     {{option}}
                 </mat-option>
-            </mat-autocomplete>
+            </mat-autocomplete> -->
         </mat-form-field>
 
         <button mat-icon-button matTooltip="Basic" style="margin-bottom: 20px; color: #00c8f8; border: 10px;"
-            aria-label="Example icon-button with a heart icon">
+            aria-label="Example icon-button with a heart icon" (click)="initializePriority()">
             <mat-icon>close</mat-icon>
         </button>
 
         <mat-form-field class="combo-box mat-form-field-100">
-            <mat-label>ID Commande</mat-label>
-            <input type="text" placeholder="ID" aria-label="ID Commande" matInput [formControl]="myControl"
-                [matAutocomplete]="auto">
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            <mat-label>Origine</mat-label>
+            <input type="text" placeholder="ID" aria-label="Origine" matInput [formControl]="origineControl"
+                [matAutocomplete]="autoOrigine">
+            <mat-autocomplete autoActiveFirstOption #autoOrigine="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOrigine | async" [value]="option">
                     {{option}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
         <button mat-icon-button matTooltip="Basic" style="margin-bottom: 20px; color: #00c8f8;"
+            (click)="initializeOrigin()"
             aria-label="Example icon-button with a heart icon">
             <mat-icon>close</mat-icon>
         </button>
