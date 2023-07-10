@@ -44,7 +44,7 @@ const routes: Routes = [
     component: ArticlesComponent
   },
   {
-    path: 'articleToValidate',
+    path: 'articleToValidate/:id',
     component: ArticlesToValidateComponent
   },
   {

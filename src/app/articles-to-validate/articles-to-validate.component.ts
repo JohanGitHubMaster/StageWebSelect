@@ -4,6 +4,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ProfilDescriptionComponent } from '../profil-description/profil-description.component';
 import { OtherProfilArticleComponent } from '../other-profil-article/other-profil-article.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { VarticleToValidateService } from 'src/shared/VarticleToValidate/VarticleToValidate.service';
+import { VarticleToValidate } from 'src/models/VarticleToValidate.model';
 
 @Component({
   selector: 'app-articles-to-validate',
@@ -16,21 +18,31 @@ export class ArticlesToValidateComponent {
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
 
-  constructor(private dialog: MatDialog, private route: ActivatedRoute,
-    private router: Router) {
+  constructor(private dialog: MatDialog, 
+              private route: ActivatedRoute,
+              private router: Router,
+              private varticleToValidateService:VarticleToValidateService) {
 
   }
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
+    
+  }
+
+  ngOnInit(){
+    const orderId = this.route.snapshot.params['id'];
+    this.varticleToValidateService.getVarticleToValidateById(0,10,orderId).subscribe(result=>{
+      this.dataList = result;
+    })
   }
 
   length = 500;
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 25];
-  dataList = ELEMENT_DATA.slice(this.pageIndex, this.pageSize);
+  dataList !:VarticleToValidate[];//ELEMENT_DATA.slice(this.pageIndex, this.pageSize);
   hidePageSize = false;
   showPageSizeOptions = true;
   showFirstLastButtons = true;
@@ -43,7 +55,11 @@ export class ArticlesToValidateComponent {
 
   handlePageEvent(e: PageEvent) {
     var current = (e.pageIndex) * e.pageSize;
-    this.dataList = ELEMENT_DATA.slice(current, e.pageSize + current)
+    // this.dataList = ELEMENT_DATA.slice(current, e.pageSize + current)
+    const orderId = this.route.snapshot.params['id'];
+    this.varticleToValidateService.getVarticleToValidateById(e.pageIndex,e.pageSize,orderId).subscribe(result=>{
+      this.dataList = result;
+    })
     this.pageEvent = e;
     this.length = ELEMENT_DATA.length;
     this.pageSize = e.pageSize;
@@ -63,8 +79,8 @@ export class ArticlesToValidateComponent {
     });
 
   }
-  OtherProfil() {
-    this.dialog.open(OtherProfilArticleComponent, { data: "toys.gif", width: '140%', height: '90%' });
+  OtherProfil(item:VarticleToValidate) {
+    this.dialog.open(OtherProfilArticleComponent, { data: item, width: '140%', height: '90%' });
   }
 
 }

@@ -1,6 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { VarticleToValidate } from 'src/models/VarticleToValidate.model';
+import { VarticleToValidateService } from 'src/shared/VarticleToValidate/VarticleToValidate.service';
 
 @Component({
   selector: 'app-other-profil-article',
@@ -10,10 +12,23 @@ import { MatTableDataSource } from '@angular/material/table';
 export class OtherProfilArticleComponent {
   displayedColumns: string[] = ['priorite', 'commande', 'ID', 'client', 'Ok', 'NOK','Details'];
   priorityId!: number;
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.slice(0, 5));
+  OtherArticleToTreat!: VarticleToValidate[];
+  dataSource = new MatTableDataSource<VarticleToValidate>();
   items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
-  constructor(@Inject(MAT_DIALOG_DATA) public data: string) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: VarticleToValidate,
+  private varticleToValidateService:VarticleToValidateService) {
     console.log(this.data);
+  }
+
+  //ngOnInit
+  ngOnInit(){
+    console.log(this.data.SourceId)
+    this.varticleToValidateService.getVarticleToValidateBySourceId(0,10,this.data.SourceId).subscribe(result=>{
+      
+      console.log(this.data.SourceId)
+      console.log(result)
+      this.dataSource = new MatTableDataSource<VarticleToValidate>(result);
+    })
   }
 
   ShowArticles(element: PeriodicElement) {
@@ -31,6 +46,8 @@ export interface PeriodicElement {
   nOk: boolean;
   details: number;
 }
+
+
 
 const ELEMENT_DATA: PeriodicElement[] = [
   { priorite: 1, commande: 'ACME', ID: 30121, client: 'H', Ok: false, nOk: true, details: 1 },

@@ -16,13 +16,13 @@ export class VOrderToTreatService {
     uri_treat = 'http://localhost:8010/api/OrderToTreat';
 
     getVOrderToTreat(page: number, limit: number,orderId?: number, customerId?:number, location?:string,flow?:string, priority?:number): Observable<any> {
-        return this.http.get<VOrderToTreat[]>(this.uri_treat + "?page=" + page + "&limit=" + limit 
-        + "&orderId=" +orderId 
-        +"&customerId=" +customerId 
-        +"&location=" +location
-        +"&flow=" +flow
-        +"&priority=" +priority )
+        // return this.http.get<VOrderToTreat[]>(this.uri_treat + "?page=" + page + "&limit=" + limit 
+        // + "&orderId=" +orderId 
+        // +"&customerId=" +customerId 
+        // +"&location=" +location
+        // +"&flow=" +flow
+        // +"&priority=" +priority )
         
-        // return this.http.get<VOrderToTreat[]>(this.uri_api + "?page=" + page + "&limit=" + limit)
+        return this.http.get<VOrderToTreat[]>(this.uri_api + "?page=" + page + "&limit=" + limit)
       }
 }

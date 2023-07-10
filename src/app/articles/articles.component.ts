@@ -76,11 +76,15 @@ export class ArticlesComponent implements AfterViewInit {
     this.mapLocationService.getMapLocation().subscribe(result=>{
       this.maplocation = result;
     })
-    this.vOrderToTreatService.getVOrderToTreat(0,10,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
+    this.vOrderToTreatService.getVOrderToTreat(0,10).subscribe(result=>{
+
+    // this.vOrderToTreatService.getVOrderToTreat(0,10,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
      
       // this.vorderToTreats = result.docs;
-      this.length = result.Length;
-      this.vorderToTreats = result.result;   
+      this.length = 590//result.Length;
+      // this.vorderToTreats = result.result;   
+      this.vorderToTreats = result;   
+
       // console.log(this.vorderToTreats)
       this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);     
     })
@@ -129,9 +133,9 @@ export class ArticlesComponent implements AfterViewInit {
 
   
 
-  ShowArticles(element: PeriodicElement) {
-    this.priorityId = element.priorite
-    this.router.navigate(["/articleToValidate"])
+  ShowArticles(element:VOrderToTreat) {
+    // this.priorityId = element.priorite
+    this.router.navigate(["/articleToValidate/"+element.OrderId])
     // console.log(element)
   }
 
@@ -326,12 +330,15 @@ export class ArticlesComponent implements AfterViewInit {
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
     console.log(this.LocationControl.value!)
-    this.vOrderToTreatService.getVOrderToTreat(current, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
+    this.vOrderToTreatService.getVOrderToTreat(e.pageIndex, this.pageSize).subscribe(result=>{
+    //this.vOrderToTreatService.getVOrderToTreat(current, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
     //  console.log("le plus "+e.pageSize)
     //  console.log(current)
       // this.vorderToTreats = result.docs;
-      this.length = result.Length;
-      this.vorderToTreats = result.result;
+      this.length = 590//result.Length;
+      // this.vorderToTreats = result.result;
+      this.vorderToTreats = result;
+
 
       // console.log(this.vorderToTreats)
       this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
@@ -343,12 +350,13 @@ export class ArticlesComponent implements AfterViewInit {
 
     // console.log(this.OrderIdOptionsControl.value!)
     // console.log(this.CustomerIDControl.value!)
-    
-    this.vOrderToTreatService.getVOrderToTreat(0, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
+    this.vOrderToTreatService.getVOrderToTreat(0,10).subscribe(result=>{
+    // this.vOrderToTreatService.getVOrderToTreat(0, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
      
       // this.vorderToTreats = result.docs;
-      this.length = result.Length;
-      this.vorderToTreats = result.result;
+      this.length = 590//result.Length;
+      this.vorderToTreats = result;
+      // this.vorderToTreats = result.result;
 
       // console.log(this.vorderToTreats)
       this.dataSource = new MatTableDataSource<VOrderToTreat>(this.vorderToTreats);
