@@ -1,7 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { KeywordGeneral } from 'src/models/KeywordGeneral.model';
+import { VKeywordDescription } from 'src/models/VKeywordDescription.model';
 import { VarticleToValidate } from 'src/models/VarticleToValidate.model';
+import { KeywordGeneralService } from 'src/shared/KeywordGeneral/KeywordGeneral.service';
+import { VKeywordDescriptionService } from 'src/shared/VKeywordDescription/VKeywordDescription.service';
 import { VarticleToValidateService } from 'src/shared/VarticleToValidate/VarticleToValidate.service';
 
 @Component({
@@ -13,16 +17,22 @@ export class OtherProfilArticleComponent {
   displayedColumns: string[] = ['priorite', 'commande', 'ID', 'client', 'Ok', 'NOK','Details'];
   priorityId!: number;
   OtherArticleToTreat!: VarticleToValidate[];
+  keywordDescription !: VKeywordDescription[];
   dataSource = new MatTableDataSource<VarticleToValidate>();
+  keywordgeneralid: KeywordGeneral = new KeywordGeneral();
   items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
   constructor(@Inject(MAT_DIALOG_DATA) public data: VarticleToValidate,
-  private varticleToValidateService:VarticleToValidateService) {
+  private varticleToValidateService:VarticleToValidateService,
+  private vkeywordDescriptionService:VKeywordDescriptionService,
+  private keywordGeneralService:KeywordGeneralService
+  ) {
     console.log(this.data);
   }
 
   //ngOnInit
   ngOnInit(){
     console.log(this.data.SourceId)
+
     this.varticleToValidateService.getVarticleToValidateBySourceId(0,10,this.data.SourceId).subscribe(result=>{
       
       console.log(this.data.SourceId)
@@ -31,9 +41,16 @@ export class OtherProfilArticleComponent {
     })
   }
 
-  ShowArticles(element: PeriodicElement) {
-    this.priorityId = element.priorite
-    console.log(element)
+  ShowArticles(element: VarticleToValidate) {
+    // console.log(element)
+    this.keywordGeneralService.getKeywordGeneralById(0,10,element.OrderId).subscribe(result=>{
+      // console.log(result)
+      this.keywordgeneralid = result[0];
+    })
+    this.vkeywordDescriptionService.getVKeywordDescriptionById(0,10,element.OrderId).subscribe(result=>{
+      this.keywordDescription = result;
+      console.log(result)
+    })
   }
 }
 

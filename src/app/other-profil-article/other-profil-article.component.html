@@ -75,7 +75,7 @@
             </mat-card-header> -->
             <mat-card-content>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend tempor lorem, eu imperdiet risus rhoncus sed. Suspendisse aliquam lacus in lacinia convallis. Praesent consectetur mattis mi, vel venenatis est fringilla eu. Vestibulum id tellus ligula. Nunc at nunc tristique, auctor mi quis, pharetra lorem.
+                {{keywordgeneralid.ProfileAdditionHtmlnl}} 
               </p>
             </mat-card-content>
             <!-- <mat-card-actions>
@@ -97,7 +97,7 @@
             </mat-card-header> -->
             <mat-card-content>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend tempor lorem, eu imperdiet risus rhoncus sed. Suspendisse aliquam lacus in lacinia convallis. Praesent consectetur mattis mi, vel venenatis est fringilla eu. Vestibulum id tellus ligula. Nunc at nunc tristique, auctor mi quis, pharetra lorem.
+                {{keywordgeneralid.ProfileAdditionHtmlfr}}
               </p>
             </mat-card-content>
             <!-- <mat-card-actions>
@@ -113,14 +113,14 @@
       <p style="margin-left: 20px;">mots clés (3x)</p>
 
       <cdk-accordion class="example-accordion">
-        <cdk-accordion-item *ngFor="let item of items; let index = index;" #accordionItem="cdkAccordionItem"
+        <cdk-accordion-item *ngFor="let item of keywordDescription; let index = index;" #accordionItem="cdkAccordionItem"
           class="example-accordion-item" role="button" tabindex="0" [attr.id]="'accordion-header-' + index"
           [attr.aria-expanded]="accordionItem.expanded" [attr.aria-controls]="'accordion-body-' + index">
           <div class="example-accordion-item-header" style="text-align: center;" (click)="accordionItem.toggle()">
 
             <mat-grid-list cols="1" rowHeight="30" class="color-in-accordion" style="background-color: transparent;">
               <mat-grid-tile>
-                {{item}}
+                {{item.KeywordName}}
               </mat-grid-tile>
             </mat-grid-list>
           </div>
@@ -129,10 +129,10 @@
             <div>
               <mat-grid-list cols="2" rowHeight="30" class="color-in-accordion">
                 <mat-grid-tile>
-                  <p>{{item}}</p>
+                  <p>{{item.KeywordDescHtmlfrweb}}</p>
                 </mat-grid-tile>
                 <mat-grid-tile>
-                  <p>{{item}}</p>
+                  <p>{{item.KeywordDescHtmlnlweb}}</p>
                 </mat-grid-tile>
               </mat-grid-list>
             </div>

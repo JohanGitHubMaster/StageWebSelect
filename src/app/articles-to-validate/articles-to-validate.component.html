@@ -69,7 +69,7 @@
       <div>
         <p>mots cles</p>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend tempor lorem, eu imperdiet risus rhoncus sed. Suspendisse aliquam lacus in lacinia convallis. Praesent consectetur mattis mi, vel venenatis est fringilla eu. Vestibulum id tellus ligula. Nunc at nunc tristique, auctor mi quis, pharetra lorem. Nulla ac turpis sollicitudin, imperdiet mi at, sagittis lacus. Phasellus quis nisl non felis ornare elementum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam non consectetur nulla, ut tincidunt mauris. Ut tristique pulvinar orci, non interdum orci tempus ac. Curabitur rhoncus, mauris sed fermentum porttitor, turpis ex aliquam ipsum, vitae imperdiet massa erat ut metus.</p>
-        <p><a href="#">http:\\articlelink.html</a></p>
+        <p><a [href]="item.Url" target="_blank">{{item.Url}}</a></p>
         <p>
           <mat-grid-list cols="3" rowHeight="80">
             <mat-grid-tile colspan="1">
@@ -102,7 +102,7 @@
     <p>mots cles</p>
     <p>La première ligne indique la priorité (P : 1), le nom de la commande et le numéro de commande, le nom du client,
       le nombre de fois que le profil </p>
-    <p><a href="#">http:\\sdsddldldsdsdldsddd.html</a></p>
+    <p><a [href]="item.Url" target="_blank">{{item.Url}}</a></p>
     <p>
       <mat-grid-list cols="3" rowHeight="80">
         <mat-grid-tile colspan="1">
@@ -145,3 +145,4 @@
   [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize" [pageIndex]="pageIndex"
   aria-label="Select page">
 </mat-paginator>
+
