@@ -74,9 +74,9 @@
               <mat-card-subtitle>Dog Breed</mat-card-subtitle>
             </mat-card-header> -->
             <mat-card-content>
-              <p>
-                {{keywordgeneralid.ProfileAdditionHtmlnl}} 
-              </p>
+              <div [innerHTML]="keywordgeneralid.ProfileAdditionHtmlnl">
+                <!-- {{keywordgeneralid.ProfileAdditionHtmlnl}}  -->
+              </div>
             </mat-card-content>
             <!-- <mat-card-actions>
               <button mat-button>LIKE</button>
@@ -96,9 +96,9 @@
               <mat-card-subtitle>Dog Breed</mat-card-subtitle>
             </mat-card-header> -->
             <mat-card-content>
-              <p>
-                {{keywordgeneralid.ProfileAdditionHtmlfr}}
-              </p>
+              <div [innerHTML]="keywordgeneralid.ProfileAdditionHtmlfr">
+                <!-- {{keywordgeneralid.ProfileAdditionHtmlfr}} -->
+              </div>
             </mat-card-content>
             <!-- <mat-card-actions>
               <button mat-button>LIKE</button>
@@ -152,9 +152,13 @@
               <mat-card-subtitle>Dog Breed</mat-card-subtitle>
             </mat-card-header> -->
             <mat-card-content>
-              <p>
+              <div class="readtext">
                 {{data.Text}}
-              </p>
+              </div>
+
+  
+                <!-- {{data.Text}} -->
+        
             </mat-card-content>
             <!-- <mat-card-actions>
               <button mat-button>LIKE</button>

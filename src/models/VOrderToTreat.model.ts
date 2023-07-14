@@ -12,6 +12,7 @@ export class VOrderToTreat {
     OrderId!: Number;
     OrderName!: String;
     Customer!:String;
+    CustomerId!:Number;
     Active!: Boolean;
     WebPriority!: Number;
     maplocation!: String;

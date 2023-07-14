@@ -76,7 +76,12 @@ export class ArticlesComponent implements AfterViewInit {
     this.mapLocationService.getMapLocation().subscribe(result=>{
       this.maplocation = result;
     })
-    this.vOrderToTreatService.getVOrderToTreat(0,10).subscribe(result=>{
+    this.vOrderToTreatService.getVOrderToTreat(0,10,+this.CustomerIDControl.value!,
+                                                    +this.OrderIdOptionsControl.value!,
+                                                    this.LocationControl.value!,
+                                                    this.origineControl.value!,
+                                                    +this.priorityControl.value!,
+                                                  ).subscribe(result=>{
 
     // this.vOrderToTreatService.getVOrderToTreat(0,10,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
      
@@ -330,7 +335,13 @@ export class ArticlesComponent implements AfterViewInit {
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
     console.log(this.LocationControl.value!)
-    this.vOrderToTreatService.getVOrderToTreat(e.pageIndex, this.pageSize).subscribe(result=>{
+ 
+    this.vOrderToTreatService.getVOrderToTreat(e.pageIndex, this.pageSize,+this.CustomerIDControl.value!,
+                                                                          +this.OrderIdOptionsControl.value!,
+                                                                          this.LocationControl.value!,
+                                                                          this.origineControl.value!,
+                                                                          +this.priorityControl.value!,
+                                                                        ).subscribe(result=>{
     //this.vOrderToTreatService.getVOrderToTreat(current, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
     //  console.log("le plus "+e.pageSize)
     //  console.log(current)
@@ -349,8 +360,14 @@ export class ArticlesComponent implements AfterViewInit {
   getfilterOrderToTreat(){
 
     // console.log(this.OrderIdOptionsControl.value!)
-    // console.log(this.CustomerIDControl.value!)
-    this.vOrderToTreatService.getVOrderToTreat(0,10).subscribe(result=>{
+     console.log(this.CustomerIDControl.value!)
+    
+    this.vOrderToTreatService.getVOrderToTreat(0,10,+this.CustomerIDControl.value!,
+                                                    +this.OrderIdOptionsControl.value!,
+                                                    this.LocationControl.value!,
+                                                    this.origineControl.value!,
+                                                    +this.priorityControl.value!,
+                                                  ).subscribe(result=>{
     // this.vOrderToTreatService.getVOrderToTreat(0, this.pageSize,+(this.OrderIdOptionsControl.value!),+this.CustomerIDControl.value!,this.LocationControl.value!,this.origineControl.value!,+this.priorityControl.value!).subscribe(result=>{
      
       // this.vorderToTreats = result.docs;

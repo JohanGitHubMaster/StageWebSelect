@@ -6,6 +6,8 @@ import { OtherProfilArticleComponent } from '../other-profil-article/other-profi
 import { ActivatedRoute, Router } from '@angular/router';
 import { VarticleToValidateService } from 'src/shared/VarticleToValidate/VarticleToValidate.service';
 import { VarticleToValidate } from 'src/models/VarticleToValidate.model';
+import { VWebOrders } from 'src/models/VWebOrders.model';
+import { VWebOrdersService } from 'src/shared/VWebOrders/VWebOrders.service';
 
 @Component({
   selector: 'app-articles-to-validate',
@@ -21,7 +23,10 @@ export class ArticlesToValidateComponent {
   constructor(private dialog: MatDialog, 
               private route: ActivatedRoute,
               private router: Router,
-              private varticleToValidateService:VarticleToValidateService) {
+              private varticleToValidateService:VarticleToValidateService,
+              private vweborderService:VWebOrdersService
+              
+              ) {
 
   }
 
@@ -33,6 +38,11 @@ export class ArticlesToValidateComponent {
 
   ngOnInit(){
     const orderId = this.route.snapshot.params['id'];
+    this.orderid = orderId;
+    this.vweborderService.getVWebOrderById(orderId).subscribe(result=>{
+      console.log(result)
+      this.weborders = result;
+    })
     this.varticleToValidateService.getVarticleToValidateById(0,10,orderId).subscribe(result=>{
       this.dataList = result;
     })
@@ -48,8 +58,10 @@ export class ArticlesToValidateComponent {
   showFirstLastButtons = true;
   disabled = false;
   priorityId!: number;
+  orderid!:number;
   labelPosition: 'before' | 'after' = 'after';
   expandedIndex = 0;
+  weborders!:VWebOrders;
 
   pageEvent!: PageEvent;
 
@@ -57,6 +69,9 @@ export class ArticlesToValidateComponent {
     var current = (e.pageIndex) * e.pageSize;
     // this.dataList = ELEMENT_DATA.slice(current, e.pageSize + current)
     const orderId = this.route.snapshot.params['id'];
+
+   
+
     this.varticleToValidateService.getVarticleToValidateById(e.pageIndex,e.pageSize,orderId).subscribe(result=>{
       this.dataList = result;
     })
