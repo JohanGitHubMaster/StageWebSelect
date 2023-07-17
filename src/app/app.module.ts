@@ -33,6 +33,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 const routes: Routes = [
   {
@@ -89,7 +90,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     MatRadioModule,
     CdkAccordionModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

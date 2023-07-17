@@ -41,7 +41,7 @@
   <cdk-accordion-item *ngFor="let item of dataList; let index = index;" #accordionItem="cdkAccordionItem"
     class="example-accordion-item" role="button" tabindex="0" [attr.id]="'accordion-header-' + index"
     [attr.aria-expanded]="accordionItem.expanded" [attr.aria-controls]="'accordion-body-' + index">
-    <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+    <div class="example-accordion-item-header" (click)="accordionItem.toggle();showelement(item)">
       <mat-grid-list cols="12" rowHeight="30">
         <mat-grid-tile colspan="2">{{item.SourceUrl}}</mat-grid-tile>
         <mat-grid-tile colspan="1">{{item.PublicationDate | date:'short'}}</mat-grid-tile>
@@ -67,8 +67,8 @@
       [style.display]="accordionItem.expanded ? '' : 'none'" [attr.id]="'accordion-body-' + index"
       [attr.aria-labelledby]="'accordion-header-' + index">
       <div>
-        <p>mots cles</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend tempor lorem, eu imperdiet risus rhoncus sed. Suspendisse aliquam lacus in lacinia convallis. Praesent consectetur mattis mi, vel venenatis est fringilla eu. Vestibulum id tellus ligula. Nunc at nunc tristique, auctor mi quis, pharetra lorem. Nulla ac turpis sollicitudin, imperdiet mi at, sagittis lacus. Phasellus quis nisl non felis ornare elementum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam non consectetur nulla, ut tincidunt mauris. Ut tristique pulvinar orci, non interdum orci tempus ac. Curabitur rhoncus, mauris sed fermentum porttitor, turpis ex aliquam ipsum, vitae imperdiet massa erat ut metus.</p>
+        <p><span *ngFor="let item of articleKeyword"  matTooltip="Info about the action">{{item.KeywordSource+" "}}</span></p>
+        <p *ngFor="let item of articleExtract"><span>{{item.Extract}}</span></p>
         <p><a [href]="item.Url" target="_blank">{{item.Url}}</a></p>
         <p>
           <mat-grid-list cols="3" rowHeight="80">

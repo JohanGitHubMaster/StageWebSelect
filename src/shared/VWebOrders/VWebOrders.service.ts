@@ -17,7 +17,7 @@ export class VWebOrdersService {
         return this.http.get<VWebOrders[]>(this.uri_api + "?page=" + page + "&limit=" + limit)
       }
     
-      getVWebOrderById(OrderId: number): Observable<any> {
+      getVWebOrderById(OrderId: Number): Observable<any> {
         return this.http.get<VWebOrders>(this.uri_api_order + "?OrderId=" + OrderId)
       }
       

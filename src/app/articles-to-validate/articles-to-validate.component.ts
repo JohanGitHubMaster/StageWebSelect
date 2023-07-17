@@ -8,6 +8,12 @@ import { VarticleToValidateService } from 'src/shared/VarticleToValidate/Varticl
 import { VarticleToValidate } from 'src/models/VarticleToValidate.model';
 import { VWebOrders } from 'src/models/VWebOrders.model';
 import { VWebOrdersService } from 'src/shared/VWebOrders/VWebOrders.service';
+import { VKeywordDescriptionService } from 'src/shared/VKeywordDescription/VKeywordDescription.service';
+import { VKeywordDescription } from 'src/models/VKeywordDescription.model';
+import { ArticleKeyword } from 'src/models/ArticleKeyword.model';
+import { ArticleKeywordService } from 'src/shared/ArticleKeyword/ArticleKeyword.service';
+import { ArticleExtractService } from 'src/shared/ArticleExtract/ArticleExtract.service';
+import { ArticleExtract } from 'src/models/ArticleExtract.model';
 
 @Component({
   selector: 'app-articles-to-validate',
@@ -24,8 +30,10 @@ export class ArticlesToValidateComponent {
               private route: ActivatedRoute,
               private router: Router,
               private varticleToValidateService:VarticleToValidateService,
-              private vweborderService:VWebOrdersService
-              
+              private vweborderService:VWebOrdersService,
+              private vkeywordDescriptionService:VKeywordDescriptionService,
+              private keywordArticleService:ArticleKeywordService,
+              private articleExtractService:ArticleExtractService,
               ) {
 
   }
@@ -40,7 +48,7 @@ export class ArticlesToValidateComponent {
     const orderId = this.route.snapshot.params['id'];
     this.orderid = orderId;
     this.vweborderService.getVWebOrderById(orderId).subscribe(result=>{
-      console.log(result)
+      // console.log(result)
       this.weborders = result;
     })
     this.varticleToValidateService.getVarticleToValidateById(0,10,orderId).subscribe(result=>{
@@ -62,7 +70,9 @@ export class ArticlesToValidateComponent {
   labelPosition: 'before' | 'after' = 'after';
   expandedIndex = 0;
   weborders!:VWebOrders;
-
+  articleKeyword!:ArticleKeyword[];
+  articleExtract!:ArticleExtract[];
+  keywordDescription !: VKeywordDescription[];
   pageEvent!: PageEvent;
 
   handlePageEvent(e: PageEvent) {
@@ -96,6 +106,19 @@ export class ArticlesToValidateComponent {
   }
   OtherProfil(item:VarticleToValidate) {
     this.dialog.open(OtherProfilArticleComponent, { data: item, width: '140%', height: '90%' });
+  }
+
+  showelement(item:VarticleToValidate){
+    // console.log(item)
+    this.keywordArticleService.getArticleKeywordById(item.ArticleSelectedId,0,10).subscribe(result=>{
+      this.articleKeyword = result;
+      console.log(result)
+    })
+
+    this.articleExtractService.getArticleExtractById(item.ArticleSelectedId,0,5).subscribe(result=>{
+      this.articleExtract = result;
+      console.log(result)
+    })
   }
 
 }
