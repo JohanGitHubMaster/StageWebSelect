@@ -4,7 +4,7 @@
       <button class="menu-button button">
         <mat-icon>refresh</mat-icon>
       </button>
-      <button class="menu-button button">
+      <button class="menu-button button" (click)="GoTocutArticle()">
         <mat-icon>content_cut</mat-icon>
       </button>
     </div>
@@ -15,7 +15,7 @@
     </div>
   </mat-grid-tile>
   <mat-grid-tile colspan="2">
-    <mat-radio-group [(ngModel)]="labelPosition">
+    <mat-radio-group>
       <label>Articles sans validation</label>
       <mat-radio-button class="example-margin" value="after">Ok</mat-radio-button>
       <mat-radio-button class="example-margin" value="before">Not Ok</mat-radio-button>
@@ -67,16 +67,18 @@
       [style.display]="accordionItem.expanded ? '' : 'none'" [attr.id]="'accordion-body-' + index"
       [attr.aria-labelledby]="'accordion-header-' + index">
       <div>
-        <p><span *ngFor="let item of articleKeyword"  matTooltip="Info about the action">{{item.KeywordSource+" "}}</span></p>
+        <p><span *ngFor="let item of articleKeyword" [matTooltipShowDelay]="400"
+        
+            matTooltip="{{keywordDescriptionHtml.KeywordDescHtmlfr||''}}" (mouseenter)="getkeyword(item.KeywordSource)">{{item.KeywordSource+" "}}</span></p>
         <p *ngFor="let item of articleExtract"><span>{{item.Extract}}</span></p>
         <p><a [href]="item.Url" target="_blank">{{item.Url}}</a></p>
         <p>
           <mat-grid-list cols="3" rowHeight="80">
             <mat-grid-tile colspan="1">
               <div class="flex-start">
-                <mat-radio-group [(ngModel)]="labelPosition">
-                  <mat-radio-button class="example-margin" value="after">Ok</mat-radio-button>
-                  <mat-radio-button class="example-margin" value="before">Not Ok</mat-radio-button>
+                <mat-radio-group >
+                  <mat-radio-button class="example-margin" name="item.ArticleSelectedId.toString()" (click)="checkOk(item,$event)" [checked]="item.IsOk" >Ok</mat-radio-button>
+                  <mat-radio-button class="example-margin"  [checked]="item.IsNotOk" (click)="checkNotOk(item,$event)">Not Ok</mat-radio-button>
                 </mat-radio-group>
               </div>
             </mat-grid-tile>
@@ -107,11 +109,12 @@
       <mat-grid-list cols="3" rowHeight="80">
         <mat-grid-tile colspan="1">
           <div class="flex-start">
-            <mat-radio-group [(ngModel)]="labelPosition">
-              <mat-radio-button class="example-margin" value="after">Ok</mat-radio-button>
-              <mat-radio-button class="example-margin" value="before">Not Ok</mat-radio-button>
+            <mat-radio-group>
+              <mat-radio-button class="example-margin" [value]="item.IsOk">Ok</mat-radio-button>
+              <mat-radio-button class="example-margin" [value]="item.IsNotOk">Not Ok</mat-radio-button>
             </mat-radio-group>
           </div>
+          
         </mat-grid-tile>
         <mat-grid-tile colspan="1">
           <div class="flex-start">

@@ -14,6 +14,8 @@ import { ArticleKeyword } from 'src/models/ArticleKeyword.model';
 import { ArticleKeywordService } from 'src/shared/ArticleKeyword/ArticleKeyword.service';
 import { ArticleExtractService } from 'src/shared/ArticleExtract/ArticleExtract.service';
 import { ArticleExtract } from 'src/models/ArticleExtract.model';
+import { KeywordDescriptionService } from 'src/shared/KeywordDescription/KeywordDescription.service';
+import { KeywordDescription } from 'src/models/KeywordDescription.model';
 
 @Component({
   selector: 'app-articles-to-validate',
@@ -34,6 +36,7 @@ export class ArticlesToValidateComponent {
               private vkeywordDescriptionService:VKeywordDescriptionService,
               private keywordArticleService:ArticleKeywordService,
               private articleExtractService:ArticleExtractService,
+              private keywordDescriptionService:KeywordDescriptionService
               ) {
 
   }
@@ -44,17 +47,7 @@ export class ArticlesToValidateComponent {
     
   }
 
-  ngOnInit(){
-    const orderId = this.route.snapshot.params['id'];
-    this.orderid = orderId;
-    this.vweborderService.getVWebOrderById(orderId).subscribe(result=>{
-      // console.log(result)
-      this.weborders = result;
-    })
-    this.varticleToValidateService.getVarticleToValidateById(0,10,orderId).subscribe(result=>{
-      this.dataList = result;
-    })
-  }
+
 
   length = 500;
   pageSize = 10;
@@ -67,23 +60,62 @@ export class ArticlesToValidateComponent {
   disabled = false;
   priorityId!: number;
   orderid!:number;
-  labelPosition: 'before' | 'after' = 'after';
+  // labelPosition: 'before' | 'after' = 'after';
   expandedIndex = 0;
-  weborders!:VWebOrders;
+  weborders:VWebOrders = new VWebOrders();
   articleKeyword!:ArticleKeyword[];
   articleExtract!:ArticleExtract[];
   keywordDescription !: VKeywordDescription[];
+  keywordDescriptionHtml : KeywordDescription = new KeywordDescription();
   pageEvent!: PageEvent;
+  modifVarticleToValidate: VarticleToValidate[] = [];
+
+  ngOnInit(){
+    console.log("miditra  ngon init")
+    const orderId = this.route.snapshot.params['id'];
+    this.orderid = +orderId;
+    this.vweborderService.getVWebOrderById(this.orderid).subscribe(result=>{
+      // console.log(result)
+      this.weborders = result;
+    })
+    this.varticleToValidateService.getVarticleToValidateById(0,10,this.orderid).subscribe(result=>{
+      console.log( result[0].Validated)
+      this.dataList = result;
+      for(let i=0;i<this.dataList.length;i++){
+        this.dataList[i].IsOk = this.dataList[i].Validated?true:false
+        this.dataList[i].IsNotOk = this.dataList[i].Validated?false:true
+      }
+      console.log(this.dataList[0].IsOk)
+      console.log(this.dataList[0].IsNotOk)
+      this.dataList = this.dataList;
+    })
+  }
 
   handlePageEvent(e: PageEvent) {
     var current = (e.pageIndex) * e.pageSize;
     // this.dataList = ELEMENT_DATA.slice(current, e.pageSize + current)
-    const orderId = this.route.snapshot.params['id'];
+    const orderId = +this.route.snapshot.params['id'];
 
    
 
     this.varticleToValidateService.getVarticleToValidateById(e.pageIndex,e.pageSize,orderId).subscribe(result=>{
+      // console.log(result)
       this.dataList = result;
+      var data:Array<VarticleToValidate> = result;
+      
+      for(let i = 0; i<this.modifVarticleToValidate.length;i++){
+        if(data.filter(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId).length>0){
+          data.filter(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId)[0].Validated = this.modifVarticleToValidate[i].Validated
+          data.filter(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId)[0].IsNotOk = this.modifVarticleToValidate[i].IsNotOk
+          data.filter(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId)[0].IsOk = this.modifVarticleToValidate[i].IsOk
+          console.log("eto ambanini ty le value")
+          
+        }
+
+      }
+      console.log(data)
+      this.dataList = data;
+      
     })
     this.pageEvent = e;
     this.length = ELEMENT_DATA.length;
@@ -112,16 +144,66 @@ export class ArticlesToValidateComponent {
     // console.log(item)
     this.keywordArticleService.getArticleKeywordById(item.ArticleSelectedId,0,10).subscribe(result=>{
       this.articleKeyword = result;
-      console.log(result)
+      // console.log(result)
     })
 
     this.articleExtractService.getArticleExtractById(item.ArticleSelectedId,0,5).subscribe(result=>{
       this.articleExtract = result;
+      // console.log(result)
+    })
+  }
+
+  getkeyword(KeywordSource:String){
+    
+    this.keywordDescriptionService.getKeywordNameByName(KeywordSource).subscribe(result=>{
+      if(result!=undefined || result!=null)
+      this.keywordDescriptionHtml = result
+      else
+      this.keywordDescriptionHtml = new KeywordDescription();
       console.log(result)
     })
   }
 
+  GoTocutArticle(){
+    console.log(this.dataList)
+  }
+
+  checkOk(item:VarticleToValidate,event:any){
+    item.IsNotOk = false;
+    item.IsOk = true;
+    item.Validated = true;
+    console.log(item.ArticleSelectedId)
+    // console.log(this.dataList)
+    if(this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId).length<=0){
+      this.modifVarticleToValidate.push(item)   
+    }   
+    else
+    this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId)[0] = item;
+
+     console.log(this.modifVarticleToValidate)
+  }
+
+  checkNotOk(item:VarticleToValidate,event:any){
+    item.IsNotOk = true;
+    item.IsOk = false;
+    item.Validated = false;
+    // console.log(event.target.name)
+    // console.log(item)
+    // console.log(this.dataList)
+    if(this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId).length<=0){
+      this.modifVarticleToValidate.push(item)   
+    }   
+    else
+    this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId)[0] = item;
+
+    console.log(this.modifVarticleToValidate)
+
+
+  }
+
 }
+
+
 export interface PeriodicElement {
   Source: string;
   Date: Date;

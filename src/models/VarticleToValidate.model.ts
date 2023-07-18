@@ -1,3 +1,4 @@
+import { BooleanInput } from "@angular/cdk/coercion";
 
 export class VarticleToValidate {
     ArticleSelectedId!: Number;
@@ -15,5 +16,7 @@ export class VarticleToValidate {
     WordCount!: Number;
     PublicationDate!: Date;
     Author!: String;
-    Url!: String
+    Url!: String;
+    IsOk!: BooleanInput;
+    IsNotOk!:BooleanInput;
 }
