@@ -38,7 +38,7 @@
   </mat-expansion-panel-header>
 </mat-expansion-panel>
 <cdk-accordion class="example-accordion">
-  <cdk-accordion-item *ngFor="let item of dataList; let index = index;" #accordionItem="cdkAccordionItem"
+  <cdk-accordion-item *ngFor="let item of dataList; let index = index;" #accordionItem="cdkAccordionItem" 
     class="example-accordion-item" role="button" tabindex="0" [attr.id]="'accordion-header-' + index"
     [attr.aria-expanded]="accordionItem.expanded" [attr.aria-controls]="'accordion-body-' + index">
     <div class="example-accordion-item-header" (click)="accordionItem.toggle();showelement(item)">
@@ -67,26 +67,28 @@
       [style.display]="accordionItem.expanded ? '' : 'none'" [attr.id]="'accordion-body-' + index"
       [attr.aria-labelledby]="'accordion-header-' + index">
       <div>
-        <p><span *ngFor="let item of articleKeyword" [matTooltipShowDelay]="400"
+        <p><span *ngFor="let item1 of articleKeyword" [matTooltipShowDelay]="400"
         
-            matTooltip="{{keywordDescriptionHtml.KeywordDescHtmlfr||''}}" (mouseenter)="getkeyword(item.KeywordSource)">{{item.KeywordSource+" "}}</span></p>
-        <p *ngFor="let item of articleExtract"><span>{{item.Extract}}</span></p>
+            matTooltip="{{keywordDescriptionHtml.KeywordDescHtmlfr||''}}" (mouseenter)="getkeyword(item1.KeywordSource)">{{item1.KeywordSource+" "}}</span></p>
+        <p *ngFor="let item1 of articleExtract"><span>{{item1.Extract}}</span></p>
         <p><a [href]="item.Url" target="_blank">{{item.Url}}</a></p>
         <p>
           <mat-grid-list cols="3" rowHeight="80">
             <mat-grid-tile colspan="1">
               <div class="flex-start">
-                <mat-radio-group >
-                  <mat-radio-button class="example-margin" name="item.ArticleSelectedId.toString()" (click)="checkOk(item,$event)" [checked]="item.IsOk" >Ok</mat-radio-button>
-                  <mat-radio-button class="example-margin"  [checked]="item.IsNotOk" (click)="checkNotOk(item,$event)">Not Ok</mat-radio-button>
+                <mat-radio-group>
+                  <!-- <mat-radio-button class="example-margin" (change)="checkOk(item,$event)" [checked]="true">Ok test</mat-radio-button> -->
+                  <mat-checkbox class="example-margin" [(ngModel)]="item.IsOk" (change)="checkOk(item,$event)">Ok</mat-checkbox> 
+                  <mat-checkbox class="example-margin" [(ngModel)]="item.IsNotOk" (change)="checkNotOk(item,$event)">Not Ok</mat-checkbox> 
+                  <!-- <mat-radio-button class="example-margin" [checked]="false"  (change)="checkNotOk(item,$event)">Not Ok test</mat-radio-button> -->
                 </mat-radio-group>
               </div>
             </mat-grid-tile>
             <mat-grid-tile colspan="2">
               <div class="flex-start" style="margin-bottom: 35px;">
-                <mat-form-field [style.width.px]=1000>
-                  <mat-label>Commentaire pour la Découpe</mat-label>
-                  <input matInput>
+                <mat-form-field  [style.width.px]=1000>
+                  <mat-label >Commentaire pour la Découpe</mat-label>
+                  <input matInput [(ngModel)]="item.Comment">
                 </mat-form-field>
               </div>
             </mat-grid-tile>
@@ -99,7 +101,7 @@
 </cdk-accordion>
 
 
-<mat-expansion-panel *ngFor="let item of dataList">
+<!-- <mat-expansion-panel *ngFor="let item of dataList">
   <div>
     <p>mots cles</p>
     <p>La première ligne indique la priorité (P : 1), le nom de la commande et le numéro de commande, le nom du client,
@@ -141,7 +143,7 @@
     </p>
   </div>
 
-</mat-expansion-panel>
+</mat-expansion-panel> -->
 
 <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
   [pageSize]="pageSize" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"

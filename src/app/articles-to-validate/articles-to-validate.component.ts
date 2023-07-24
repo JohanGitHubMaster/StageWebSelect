@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild,AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ProfilDescriptionComponent } from '../profil-description/profil-description.component';
@@ -16,6 +16,7 @@ import { ArticleExtractService } from 'src/shared/ArticleExtract/ArticleExtract.
 import { ArticleExtract } from 'src/models/ArticleExtract.model';
 import { KeywordDescriptionService } from 'src/shared/KeywordDescription/KeywordDescription.service';
 import { KeywordDescription } from 'src/models/KeywordDescription.model';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-articles-to-validate',
@@ -27,6 +28,8 @@ export class ArticlesToValidateComponent {
   panelOpenState = false;
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+
+  
 
   constructor(private dialog: MatDialog, 
               private route: ActivatedRoute,
@@ -44,7 +47,8 @@ export class ArticlesToValidateComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
-    
+    console.log("miditra after init")
+   
   }
 
 
@@ -69,6 +73,7 @@ export class ArticlesToValidateComponent {
   keywordDescriptionHtml : KeywordDescription = new KeywordDescription();
   pageEvent!: PageEvent;
   modifVarticleToValidate: VarticleToValidate[] = [];
+  datacomment: VarticleToValidate[] = [];
 
   ngOnInit(){
     console.log("miditra  ngon init")
@@ -85,11 +90,12 @@ export class ArticlesToValidateComponent {
         this.dataList[i].IsOk = this.dataList[i].Validated?true:false
         this.dataList[i].IsNotOk = this.dataList[i].Validated?false:true
       }
-      console.log(this.dataList[0].IsOk)
-      console.log(this.dataList[0].IsNotOk)
-      this.dataList = this.dataList;
+  
+      //this.dataList = this.dataList;
     })
   }
+
+
 
   handlePageEvent(e: PageEvent) {
     var current = (e.pageIndex) * e.pageSize;
@@ -100,21 +106,46 @@ export class ArticlesToValidateComponent {
 
     this.varticleToValidateService.getVarticleToValidateById(e.pageIndex,e.pageSize,orderId).subscribe(result=>{
       // console.log(result)
-      this.dataList = result;
+      // this.dataList = [];
       var data:Array<VarticleToValidate> = result;
-      
+      for(let i=0;i<data.length;i++){
+        data[i].IsOk = data[i].Validated?true:false
+        data[i].IsNotOk = data[i].Validated?false:true
+      }
       for(let i = 0; i<this.modifVarticleToValidate.length;i++){
         if(data.filter(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId).length>0){
-          data.filter(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId)[0].Validated = this.modifVarticleToValidate[i].Validated
-          data.filter(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId)[0].IsNotOk = this.modifVarticleToValidate[i].IsNotOk
-          data.filter(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId)[0].IsOk = this.modifVarticleToValidate[i].IsOk
-          console.log("eto ambanini ty le value")
-          
+          var s = data.findIndex(x=>x.ArticleSelectedId == this.modifVarticleToValidate[i].ArticleSelectedId)
+          console.log(s);
+          data[s].Validated = this.modifVarticleToValidate[i].Validated
+          data[s].IsNotOk = this.modifVarticleToValidate[i].IsNotOk
+          data[s].IsOk = this.modifVarticleToValidate[i].IsOk          
         }
 
+        
+
       }
-      console.log(data)
+      
+      for(let i = 0; i<this.dataList.length;i++){
+        console.log(this.dataList[i])
+        if(this.dataList[i].Comment != null || this.dataList[i].Comment != undefined){
+          this.datacomment.push(this.dataList[i])
+        }
+      }
+      
+      for(let i = 0; i<this.datacomment.length;i++){
+        // data[i].Comment = this.dataList[i].Comment;
+        var s = data.findIndex(x=>x.ArticleSelectedId == this.datacomment[i].ArticleSelectedId)
+        if(s>0){
+          data[s].Comment = this.datacomment[i].Comment
+        }
+        
+        console.log(this.datacomment)
+    }
+      console.log(this.modifVarticleToValidate)
       this.dataList = data;
+      console.log(this.dataList[0])
+
+      // this.dataList[0].IsOk = true
       
     })
     this.pageEvent = e;
@@ -142,7 +173,11 @@ export class ArticlesToValidateComponent {
 
   showelement(item:VarticleToValidate){
     // console.log(item)
+    // item.IsOk = true;
+    // item.IsNotOk = false;
+    console.log(item.IsOk)
     this.keywordArticleService.getArticleKeywordById(item.ArticleSelectedId,0,10).subscribe(result=>{
+     
       this.articleKeyword = result;
       // console.log(result)
     })
@@ -166,37 +201,54 @@ export class ArticlesToValidateComponent {
 
   GoTocutArticle(){
     console.log(this.dataList)
+    
+    var dialogRef = this.dialog.open(DialogComponent, { data: this.modifVarticleToValidate });
   }
 
   checkOk(item:VarticleToValidate,event:any){
+
     item.IsNotOk = false;
     item.IsOk = true;
     item.Validated = true;
-    console.log(item.ArticleSelectedId)
+    console.log("miditra check ok")
+    // console.log(item.ArticleSelectedId)
     // console.log(this.dataList)
-    if(this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId).length<=0){
-      this.modifVarticleToValidate.push(item)   
-    }   
-    else
-    this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId)[0] = item;
 
-     console.log(this.modifVarticleToValidate)
+    if(this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId).length<=0){
+      this.modifVarticleToValidate.push(item)  
+      // console.log(this.modifVarticleToValidate.find(x=>x.ArticleSelectedId == item.ArticleSelectedId)) 
+    }   
+    else{
+      var index = this.modifVarticleToValidate.findIndex(x=>x.ArticleSelectedId == item.ArticleSelectedId);
+      this.modifVarticleToValidate[index] = item;
+
+    }
+    console.log(this.modifVarticleToValidate.find(x=>x.ArticleSelectedId == item.ArticleSelectedId)) 
+    // console.log(this.modifVarticleToValidate)
   }
 
   checkNotOk(item:VarticleToValidate,event:any){
     item.IsNotOk = true;
     item.IsOk = false;
     item.Validated = false;
+    console.log(item)
+    // console.log(event)
     // console.log(event.target.name)
     // console.log(item)
     // console.log(this.dataList)
     if(this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId).length<=0){
       this.modifVarticleToValidate.push(item)   
+      //console.log(item)
     }   
-    else
-    this.modifVarticleToValidate.filter(x=>x.ArticleSelectedId == item.ArticleSelectedId)[0] = item;
-
-    console.log(this.modifVarticleToValidate)
+    else{
+     var index = this.modifVarticleToValidate.findIndex(x=>x.ArticleSelectedId == item.ArticleSelectedId);
+     this.modifVarticleToValidate[index] = item;
+      // this.modifVarticleToValidate.push(item)  
+      // console.log(item) 
+    }
+    console.log(this.modifVarticleToValidate.find(x=>x.ArticleSelectedId == item.ArticleSelectedId)) 
+    
+    // console.log(this.modifVarticleToValidate)
 
 
   }

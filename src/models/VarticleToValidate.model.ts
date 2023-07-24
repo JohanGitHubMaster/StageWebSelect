@@ -17,6 +17,6 @@ export class VarticleToValidate {
     PublicationDate!: Date;
     Author!: String;
     Url!: String;
-    IsOk!: BooleanInput;
-    IsNotOk!:BooleanInput;
+    IsOk!: boolean;
+    IsNotOk!:boolean;
 }

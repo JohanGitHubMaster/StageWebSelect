@@ -20,5 +20,15 @@ export class VWebOrdersService {
       getVWebOrderById(OrderId: Number): Observable<any> {
         return this.http.get<VWebOrders>(this.uri_api_order + "?OrderId=" + OrderId)
       }
+
+      getWindowsUsername(): string {
+        try {
+          const network = new ActiveXObject('WScript.Network');
+          return network.UserName;
+        } catch (error) {
+          console.error('Error getting Windows username:', error);
+          return '';
+        }
+      }
       
 }

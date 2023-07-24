@@ -34,6 +34,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { DialogComponent } from './dialog/dialog.component';
 
 const routes: Routes = [
   {
@@ -64,7 +65,8 @@ const routes: Routes = [
     ArticlesComponent,
     ArticlesToValidateComponent,
     ProfilDescriptionComponent,
-    OtherProfilArticleComponent
+    OtherProfilArticleComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
